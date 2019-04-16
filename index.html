@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <base target="_top">
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+    integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
+  <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+    integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+    crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+    integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+    crossorigin="anonymous"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+    integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+    crossorigin="anonymous"></script>
+  <style>
+    .container-fluid {
+      width: 55%;
+    }
+
+    .filter {
+      display: flex;
+      justify-content: space-between;
+      margin: 10px 10px;
+    }
+
+    tbody>tr>td {
+      border-top: 1px solid black !important;
+      text-align: center;
+      vertical-align: middle !important;
+    }
+
+    label {
+      margin: 0 20px;
+    }
+
+    select {
+      cursor: pointer;
+    }
+
+    .circular-landscape {
+      display: inline-block;
+      position: relative;
+      width: 80px;
+      height: 80px;
+      overflow: hidden;
+      border-radius: 50%;
+    }
+
+    .circular-landscape img {
+      width: auto;
+      height: 100%;
+      margin-left: -35px;
+    }
+
+    .img-link {
+      cursor: pointer;
+    }
+
+    .main {
+      width: 25%;
+    }
+
+    p {
+      font-weight: 700;
+    }
+
+    .info {
+      display: flex;
+      justify-content: space-between;
+    }
+  </style>
+</head>
+
+<body style="background-color: #dddddd">
+  <div class="container-fluid">
+    <form>
+      <div class="form-group" style="width: 65%">
+        <div class="filter">
+          <label style="font-size: 22px; font-weight:700">Please Select Department</label>
+          <select id="dept-list" class="form-control col-md-5">
+            <option selected>All</option>
+            <option>Roll Fed</option>
+            <option>Inline</option>
+            <option>Eco Star</option>
+            <option>North Plant</option>
+          </select>
+        </div>
+        <div class="filter">
+          <label style="font-size: 20px; font-weight: 500">Please Select Crew</label>
+          <select id="crew-list" class="form-control col-md-5">
+            <option selected>All</option>
+            <option>A Crew</option>
+            <option>B Crew</option>
+            <option>C Crew</option>
+            <option>D Crew</option>
+            <option>Days</option>
+            <option>Nights</option>
+          </select>
+        </div>
+      </div>
+    </form>
+
+    <table class="table">
+      <tbody>
+        <?
+        var data = getDataByDate();
+        for (var i = 0; i < data.length; i++) {
+          if (data[i][1]) {?>
+        <tr>
+          <td>
+            <p><?=data[i][1] + ', ' + data[i][2]?></p>
+            <div class="circular-landscape">
+              <img src="<?= data[i][8].replace('open', 'uc');?>">
+            </div>
+          </td>
+          <td class="main">
+            <div class="info">
+              <p>Department:</p>
+              <label>
+                <?= data[i][3]?>
+              </label>
+            </div>
+            <div class="info">
+              <p>Crew:</p>
+              <label>
+                <?= data[i][4]?>
+              </label>
+            </div>
+            <div class="info">
+              <p>Start Date:</p>
+              <label>
+                <?= Utilities.formatDate(data[i][6], "CST", "MM/dd/YY")?>
+              </label>
+            </div>
+          </td>
+          <td style="width: 100px"></td>
+          <td>
+            <p>Report Attandance</p>
+            <img class="img-link"
+              src="https://static.wixstatic.com/media/e6a350_323e9b69ac5a48969f5dd64ba34593a6~mv2.png/v1/fill/w_80,h_80,al_c,q_80,usm_0.66_1.00_0.01/176-calendar-1.webp">
+          </td>
+          <td>
+            <p>Provide Feedback</p>
+            <img class="img-link"
+              src="https://static.wixstatic.com/media/e6a350_97a07bd0a5c14a5f895c94f96efe7403~mv2.png/v1/fill/w_80,h_80,al_c,q_80,usm_0.66_1.00_0.01/086-analytics-7.webp">
+          </td>
+          <td>
+            <p>Print New Hire Checklist</p>
+            <img class="img-link"
+              src="https://static.wixstatic.com/media/e6a350_224f2535728443c0b9ba179fcee29578~mv2.png/v1/fill/w_80,h_80,al_c,q_80,usm_0.66_1.00_0.01/086-curriculum-vitae.webp">
+          </td>
+        </tr>
+        <?}
+      }?>
+      </tbody>
+    </table>
+  </div>
+</body>
+<script>
+  function myFunction() {
+  var input, filter, table, tr, td, i, txtValue;
+  input = document.getElementById("myInput");
+  filter = input.value.toUpperCase();
+  table = document.getElementById("myTable");
+  tr = table.getElementsByTagName("tr");
+  for (i = 0; i < tr.length; i++) {
+    td = tr[i].getElementsByTagName("td")[0];
+    if (td) {
+      txtValue = td.textContent || td.innerText;
+      if (txtValue.toUpperCase().indexOf(filter) > -1) {
+        tr[i].style.display = "";
+      } else {
+        tr[i].style.display = "none";
+      }
+    }       
+  }
+}
+</script>
+
+</html>
