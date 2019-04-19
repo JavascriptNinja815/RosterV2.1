@@ -111,8 +111,13 @@
       <tbody>
         <?
         var data = getDataByDate();
+        var currentDate = new Date();
         for (var i = 0; i < data.length; i++) {
-          if (data[i][1]) {?>
+          var endDate = '';
+          if (data[i][9]) {
+            endDate = new Date(new Date(data[i][9].getTime() + 2 * 60 * 60 * 1000));
+          }
+          if (data[i][1] && (!endDate || currentDate < endDate)) {?>
         <tr>
           <td>
             <p><?=data[i][1] + ', ' + data[i][2]?></p>
@@ -164,24 +169,42 @@
   </div>
 </body>
 <script>
-  function myFunction() {
-  var input, filter, table, tr, td, i, txtValue;
-  input = document.getElementById("myInput");
-  filter = input.value.toUpperCase();
-  table = document.getElementById("myTable");
-  tr = table.getElementsByTagName("tr");
-  for (i = 0; i < tr.length; i++) {
-    td = tr[i].getElementsByTagName("td")[0];
-    if (td) {
-      txtValue = td.textContent || td.innerText;
-      if (txtValue.toUpperCase().indexOf(filter) > -1) {
-        tr[i].style.display = "";
-      } else {
-        tr[i].style.display = "none";
-      }
-    }       
-  }
-}
+  $(document).ready(function () {
+    $("#dept-list").change(function () {
+      var check = true;
+      var dept = $("#dept-list").val();
+      var crew = $("#crew-list").val();
+
+      $(".main").filter(function () {
+        if (dept == 'All' && crew != 'All') {
+          check = $(this).text().indexOf(crew) > -1
+        } else if (dept != 'All' && crew == 'All') {
+          check = $(this).text().indexOf(dept) > -1
+        } else if (dept != 'All' && crew != 'All') {
+          check = $(this).text().indexOf(dept) > -1 && $(this).text().indexOf(crew) > -1
+        }
+        $(this).parent().toggle(check)
+      });
+    })
+    $("#crew-list").change(function () {
+      var dept = $("#dept-list").val();
+      var crew = $("#crew-list").val();
+
+      $(".main").filter(function () {
+        if (dept == 'All' && crew == 'All') {
+          check = true;
+        } else if (dept == 'All' && crew != 'All') {
+          check = $(this).text().indexOf(crew) > -1
+        } else if (dept != 'All' && crew == 'All') {
+          check = $(this).text().indexOf(dept) > -1
+        } else {
+          check = $(this).text().indexOf(dept) > -1 && $(this).text().indexOf(crew) > -1
+        }
+        $(this).parent().toggle(check)
+      });
+    })
+  })
+
 </script>
 
 </html>
