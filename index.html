@@ -13,9 +13,7 @@
   <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
     integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
     crossorigin="anonymous"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
-    integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
-    crossorigin="anonymous"></script>
+
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
     integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
     crossorigin="anonymous"></script>
@@ -114,8 +112,12 @@
         var currentDate = new Date();
         for (var i = 0; i < data.length; i++) {
           var endDate = '';
+          var checkList = '';
           if (data[i][9]) {
             endDate = new Date(new Date(data[i][9].getTime() + 2 * 60 * 60 * 1000));
+          }
+          if (data[i][11]) {
+            checkList = data[i][11];
           }
           if (data[i][1] && (!endDate || currentDate < endDate)) {?>
         <tr>
@@ -158,9 +160,18 @@
           </td>
           <td>
             <p>Print New Hire Checklist</p>
-            <img class="img-link"
-              src="https://static.wixstatic.com/media/e6a350_224f2535728443c0b9ba179fcee29578~mv2.png/v1/fill/w_80,h_80,al_c,q_80,usm_0.66_1.00_0.01/086-curriculum-vitae.webp">
+            <?
+            if (!checkList) {?>
+            <a href="javascript:void(0);">
+              <?
+            } else {?>
+              <a href="<?= checkList ?>" target="_blank">
+                <?}?>
+                <img class="img-link"
+                  src="https://static.wixstatic.com/media/e6a350_224f2535728443c0b9ba179fcee29578~mv2.png/v1/fill/w_80,h_80,al_c,q_80,usm_0.66_1.00_0.01/086-curriculum-vitae.webp">
+              </a>
           </td>
+
         </tr>
         <?}
       }?>
