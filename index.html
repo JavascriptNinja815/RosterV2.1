@@ -17,6 +17,7 @@
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
     integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
     crossorigin="anonymous"></script>
+  <script type="text/javascript" src="https://cdn.emailjs.com/sdk/2.3.2/email.min.js"></script>
   <style>
     .container-fluid {
       width: 100%;
@@ -69,9 +70,14 @@
       font-weight: 700;
     }
 
-    .info {
+    .inline {
       display: flex;
       justify-content: space-between;
+    }
+
+    .button {
+      text-align: right;
+      margin-right: 25px;
     }
   </style>
 </head>
@@ -122,32 +128,41 @@
           if (data[i][1] && (!endDate || currentDate < endDate)) {?>
         <tr>
           <td>
-            <p><?=data[i][1] + ', ' + data[i][2]?></p>
+            <p><?=data[i][1] + ' ' + data[i][2]?></p>
             <div class="circular-landscape">
               <img src="<?= data[i][8].replace('open', 'uc');?>">
             </div>
           </td>
           <td class="main">
-            <div class="info">
+            <div class="inline">
               <p>Department:</p>
               <label>
                 <?= data[i][3]?>
               </label>
             </div>
-            <div class="info">
+            <div class="inline">
               <p>Crew:</p>
               <label>
                 <?= data[i][4]?>
               </label>
             </div>
-            <div class="info">
+            <div class="inline">
               <p>Start Date:</p>
               <label>
                 <?= Utilities.formatDate(data[i][6], "CST", "MM/dd/YY")?>
               </label>
             </div>
           </td>
-          <td style="width: 200px"></td>
+          <td>
+            <form class="sendEmail">
+              <div class="textarea">
+                <textarea required></textarea>
+              </div>
+              <div>
+                <button type="submit" class="btn btn-primary">Send Email</button>
+              </div>
+            </form>
+          </td>
           <td>
             <p>Print New Hire Checklist</p>
             <?
@@ -167,6 +182,31 @@
       }?>
       </tbody>
     </table>
+    <div class="modal" id="confirm">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Are you sure to send message?</h5>
+          </div>
+          <div class="modal-footer">
+            <button id="yes" type="button" class="btn btn-primary">Yes</button>
+            <button id="no" type="button" class="btn btn-secondary">No</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="modal" id="response">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="result"></h5>
+          </div>
+          <div class="modal-footer">
+            <button id="ok" type="button" class="btn btn-primary">OK</button>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </body>
 <script>
@@ -204,6 +244,41 @@
         $(this).parent().toggle(check)
       });
     })
+
+    var body = '';
+    $(".sendEmail").submit(function (e) {
+      e.preventDefault();
+      body = $(this)[0][0].value;
+      $('#confirm').show();
+    });
+    $('#yes').click(function (e) {
+      e.preventDefault();
+      $('#confirm').hide();
+      var templateParams = {
+        from_name: 'support@celecritystaffing.com',
+        notes: body
+      };
+      
+      // emailjs.send('gmail', 'template_8MXlYeKN', templateParams, "user_TrPmo3okFuQUJsvgV7kcv")
+      emailjs.send('gmail', 'template_yFSGUhxH', templateParams, "user_cqsUEJ7cdDDEOydVAXEM5")
+        // user_cqsUEJ7cdDDEOydVAXEM5 // template_yFSGUhxH
+
+        .then(function (response) {
+          $('#result').text('Email Was Sent');
+          $('#response').show();
+        }, function (error) {
+          $('#result').text('Failed To Send Email due to ' + error);
+          $('#response').show();
+        });
+    });
+    $('#ok').click(function (e) {
+      e.preventDefault();
+      $('#response').hide();
+    })
+    $('#no').click(function (e) {
+      e.preventDefault();
+      $('#confirm').hide();
+    });
   })
 
 </script>
