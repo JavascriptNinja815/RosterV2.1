@@ -79,6 +79,10 @@
       text-align: right;
       margin-right: 25px;
     }
+    .name {
+      width: 92%;
+      margin-bottom: 5px;
+    }
   </style>
 </head>
 
@@ -157,9 +161,13 @@
             <form class="sendEmail">
               <div class="textarea">
                 <textarea required></textarea>
+                <input style="display: none;" value="<?=data[i][1] + ' ' + data[i][2] + ' ' + data[i][3] + ' ' + data[i][4]?>">
               </div>
               <div>
-                <button type="submit" class="btn btn-primary">Send Email</button>
+                <input class="name" placeholder="Your Name Here" required>
+              </div>
+              <div>
+                <button type="submit" class="btn btn-primary">Submit</button>
               </div>
             </form>
           </td>
@@ -176,7 +184,6 @@
                   src="https://static.wixstatic.com/media/e6a350_224f2535728443c0b9ba179fcee29578~mv2.png/v1/fill/w_80,h_80,al_c,q_80,usm_0.66_1.00_0.01/086-curriculum-vitae.webp">
               </a>
           </td>
-
         </tr>
         <?}
       }?>
@@ -186,7 +193,7 @@
       <div class="modal-dialog" role="document">
         <div class="modal-content">
           <div class="modal-header">
-            <h5 class="modal-title">Are you sure to send message?</h5>
+            <h5 class="modal-title">Are you ready to send message?</h5>
           </div>
           <div class="modal-footer">
             <button id="yes" type="button" class="btn btn-primary">Yes</button>
@@ -245,24 +252,25 @@
       });
     })
 
-    var body = '';
+    var body, subject, name = '';
     $(".sendEmail").submit(function (e) {
       e.preventDefault();
       body = $(this)[0][0].value;
+      subject = $(this)[0][1].value;
+      name = $(this)[0][2].value;
       $('#confirm').show();
     });
     $('#yes').click(function (e) {
       e.preventDefault();
       $('#confirm').hide();
       var templateParams = {
-        from_name: 'support@celecritystaffing.com',
-        notes: body
+        subject: subject,
+        from: 'support@celeritystaffing.com',
+        notes: body,
+        name: name
       };
-      
-      // emailjs.send('gmail', 'template_8MXlYeKN', templateParams, "user_TrPmo3okFuQUJsvgV7kcv")
       emailjs.send('gmail', 'template_yFSGUhxH', templateParams, "user_cqsUEJ7cdDDEOydVAXEM5")
-        // user_cqsUEJ7cdDDEOydVAXEM5 // template_yFSGUhxH
-
+      // emailjs.send('gmail', 'template_QUCTjYLU', templateParams, "user_HCq6xpKMfGLOnNTAVQlR4")
         .then(function (response) {
           $('#result').text('Email Was Sent');
           $('#response').show();
